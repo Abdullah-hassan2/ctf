@@ -15,27 +15,38 @@
   </form>
   <p id="result"></p>
 
-  <script>
-    document.getElementById('flagForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const flag = document.getElementById('flagInput').value;
-      
-      try {
-        const response = await fetch('/api/checkFlag', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ flag })
-        });
+ <script>
+document.getElementById('flagForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const flagInput = document.getElementById('flagInput');
+  const resultElement = document.getElementById('result');
 
-        const result = await response.json();
-        document.getElementById('result').textContent = result.message;
-      } catch (error) {
-        console.error('Submission error:', error);
-        document.getElementById('result').textContent = 'Error submitting flag';
-      }
+  try {
+    console.log('Submitting flag:', flagInput.value);
+    
+    const response = await fetch('/api/checkFlag', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ flag: flagInput.value })
     });
-  </script>
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('Server response:', result);
+
+    resultElement.textContent = result.message;
+    resultElement.style.color = result.correct ? 'green' : 'red';
+  } catch (error) {
+    console.error('Submission error:', error);
+    resultElement.textContent = 'Error submitting flag. Please try again.';
+    resultElement.style.color = 'red';
+  }
+});
+</script>
 </body>
 </html>
