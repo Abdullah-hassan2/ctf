@@ -1,0 +1,9 @@
+{
+    "version": 2,
+    "builds": [
+      { "src": "functions/checkFlag.js", "use": "@vercel/node" }
+    ],
+    "routes": [
+      { "src": "/api/checkFlag", "dest": "functions/checkFlag.js" }
+    ]
+  }
