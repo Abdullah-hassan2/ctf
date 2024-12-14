@@ -1,32 +1,44 @@
 module.exports = async (req, res) => {
-  // CORS Headers
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+  // Enhanced error handling and logging
+  console.log('Incoming request:', req.method, req.body);
 
+  // CORS Configuration
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
-  if (req.method === 'POST') {
+  // Only allow POST requests
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  try {
     const { flag } = req.body;
+    console.log('Received flag:', flag);
+
     const correctFlag = 'robot{elliot_alderson}';
   
     if (flag === correctFlag) {
-      res.status(200).json({ 
-        message: 'Congratulations! You have solved this challenge!' 
+      return res.status(200).json({ 
+        message: 'Congratulations! You solved the challenge!',
+        correct: true
       });
     } else {
-      res.status(400).json({ 
-        message: 'Incorrect flag. Try again!' 
+      return res.status(200).json({ 
+        message: 'Incorrect flag. Try again!',
+        correct: false 
       });
     }
-  } else {
-    res.status(405).end();
+  } catch (error) {
+    console.error('Flag submission error:', error);
+    return res.status(500).json({ 
+      error: 'Internal Server Error',
+      details: error.message 
+    });
   }
 };
