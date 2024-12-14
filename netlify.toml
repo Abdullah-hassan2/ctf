@@ -1,0 +1,3 @@
+[build]
+  functions = "functions"  # This tells Netlify where to look for serverless functions
+  publish = "public"       # This tells Netlify where to find the static files (HTML, CSS)
