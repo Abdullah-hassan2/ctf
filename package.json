@@ -1,7 +1,14 @@
 {
-  "name": "mr-robot-ctf",
+  "name": "ctf-challenge",
   "version": "1.0.0",
   "engines": {
-    "node": ">=18.0.0"
+    "node": "18.x"
+  },
+  "scripts": {
+    "build": "echo 'Static site deployment'",
+    "start": "serve public"
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
   }
 }
